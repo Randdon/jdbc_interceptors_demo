@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhouyuan.space.demo.mapper.DataMapper">
+
+    <select id="listAllExp"  resultType="com.zhouyuan.space.demo.entity.Data">
+        select
+        *
+        from data
+        where bd = 1
+    </select>
+    <select id="listAll"  resultType="com.zhouyuan.space.demo.entity.Data">
+        select
+        *
+        from data
+    </select>
+    <select id="listAllById" parameterType="integer" resultType="com.zhouyuan.space.demo.entity.Data">
+        select
+        *
+        from data
+        where id = #{id}
+    </select>
+
+    <update id="updateNameById" parameterType="map">
+        update data
+        set name = #{name}
+        where id = #{id}
+    </update>
+
+    <insert id="save" parameterType="com.zhouyuan.space.demo.entity.Data">
+        insert into data (name,description,detail,age)
+        values (#{name},#{description},#{detail},#{age})
+    </insert>
+
+    <delete id="deleteById" parameterType="integer">
+        delete from data
+        where id = #{id}
+    </delete>
+
+</mapper>
