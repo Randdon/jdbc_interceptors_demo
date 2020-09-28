@@ -11,7 +11,7 @@
     <select id="listAll"  resultType="com.zhouyuan.space.demo.entity.Data">
         select
         *
-        from data
+        from "data"
     </select>
     <select id="listAllById" parameterType="integer" resultType="com.zhouyuan.space.demo.entity.Data">
         select
@@ -27,12 +27,12 @@
     </update>
 
     <insert id="save" parameterType="com.zhouyuan.space.demo.entity.Data">
-        insert into data (name,description,detail,age)
-        values (#{name},#{description},#{detail},#{age})
+        insert into "data" ("id","name","description","detail","age")
+        values (#{id},#{name},#{description},#{detail},#{age})
     </insert>
 
     <delete id="deleteById" parameterType="integer">
-        delete from data
+        delete from "data"
         where id = #{id}
     </delete>
 

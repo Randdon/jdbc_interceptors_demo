@@ -6,7 +6,7 @@ import com.casic.log.config.LogCenterProperties;
 import com.casic.log.constant.CommonConstant;
 import com.casic.log.constant.LogCodeEnum;
 import com.casic.log.constant.LogLevelConstant;
-import com.casic.log.domain.DataBaseLogInfo;
+import com.casic.log.domain.DataLogDetailInfo;
 import com.casic.log.domain.LogInfo;
 import com.casic.log.service.KafkaSender;
 import com.casic.log.utils.DateTimeUtils;
@@ -14,12 +14,10 @@ import com.casic.log.utils.MD5Util;
 import com.casic.log.utils.SpringContextUtil;
 import com.casic.log.utils.TraceIdUtils;
 import com.mysql.cj.MysqlConnection;
-import com.mysql.cj.ParseInfo;
 import com.mysql.cj.Query;
 import com.mysql.cj.conf.HostInfo;
 import com.mysql.cj.exceptions.ExceptionInterceptor;
 import com.mysql.cj.interceptors.QueryInterceptor;
-import com.mysql.cj.jdbc.ClientPreparedStatement;
 import com.mysql.cj.log.Log;
 import com.mysql.cj.protocol.Resultset;
 import com.mysql.cj.protocol.ServerSession;
@@ -171,7 +169,7 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
 
         long executeTime = null == interceptedQuery ? DateTimeUtils.LocalDateTime2Long(now) - startTime :
                 interceptedQuery.getExecuteTime();
-        DataBaseLogInfo dataBaseLogInfo = DataBaseLogInfo.builder()
+        DataLogDetailInfo dataBaseLogInfo = DataLogDetailInfo.builder()
                 .code(code)
                 .message(message)
                 .level(level)
@@ -185,7 +183,7 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
 
         String systemName = logCenterProperties.getSystemName();
         String systemId = MD5Util.getSaltMD5(CommonConstant.SALT, systemName);
-        String serverName = logCenterProperties.getServerName();
+        String serverName = logCenterProperties.getServiceName();
         String serverId = MD5Util.getSaltMD5(CommonConstant.SALT, serverName);
 
         LogInfo logInfo = LogInfo.builder()
@@ -193,11 +191,11 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
                 .userId(request.getHeader(CommonConstant.USER_ID))
                 .systemName(systemName)
                 .systemId(systemId)
-                .serverName(serverName)
-                .serverId(serverId)
+                .serviceName(serverName)
+                .serviceId(serverId)
                 .traceId(TraceIdUtils.getTraceId())
                 .timestamp(DateTimeUtils.format(now, DateTimeUtils.DATE_TIME_MILLIS))
-                .dataBaseLogInfo(dataBaseLogInfo)
+                .dataLogDetailInfo(dataBaseLogInfo)
                 .build();
 
         if (null != originalResultSet){
@@ -234,7 +232,7 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
             logAction.accept(logger,result);
 
             try {
-                kafkaSender.send(topic, result);
+                kafkaSender.send(result);
             } catch (Exception e) {
                 logger.error("Kafka发送sql日志失败，logInfo：{}，Kafka`s topic：{}", result, topic, e);
             }
@@ -267,11 +265,11 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
     public Exception interceptException(Exception sqlEx) {
         LogInfo logInfo = threadLocal.get();
         if (null != logInfo){
-            logInfo.getDataBaseLogInfo().setErrorMsg(sqlEx.getMessage() + Arrays.toString(sqlEx.getStackTrace()));
+            logInfo.getDataLogDetailInfo().setErrorMsg(sqlEx.getMessage() + Arrays.toString(sqlEx.getStackTrace()));
             if (sqlEx instanceof SQLException){
                 SQLException sqlException = (SQLException) sqlEx;
-                logInfo.getDataBaseLogInfo().setCode(String.valueOf(sqlException.getErrorCode()));
-                logInfo.getDataBaseLogInfo().setErrorMsg(sqlException.getSQLState());
+                logInfo.getDataLogDetailInfo().setCode(String.valueOf(sqlException.getErrorCode()));
+                logInfo.getDataLogDetailInfo().setErrorMsg(sqlException.getSQLState());
             }
             logJsonAndSend(logInfo,Logger::error);
             threadLocal.remove();

@@ -1,6 +1,7 @@
 package com.zhouyuan.space.demo.service;
 
 import com.casic.log.annotation.ServiceLog;
+import com.casic.log.constant.LogActionEnum;
 import com.zhouyuan.space.demo.entity.Data;
 import com.zhouyuan.space.demo.mapper.DataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class DataService {
         return dataMapper.listAll();
     }
 
-    @ServiceLog(description = "查询所有记录",message = "查询不存在的列")
+    @ServiceLog(description = "查询所有记录",action = LogActionEnum.READ)
     public List<Data> listAllExp(String name, int id){
         return dataMapper.listAllExp();
     }
@@ -33,7 +34,7 @@ public class DataService {
         dataMapper.updateNameById(map);
     }
 
-    @ServiceLog(description = "保存用户信息",message = "新增用户操作")
+    @ServiceLog(description = "保存用户信息",action = LogActionEnum.CREATE)
     public void save(Data data){
         dataMapper.save(data);
     }
