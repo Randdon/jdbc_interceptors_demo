@@ -25,7 +25,7 @@ public class DateTimeTest {
         Data data = new Data();
         String str = "cun";
         biConsume(data,str,Data::setDescription);
-        Data data1 = new Data("hull", "desc", "jjj", 23);
+        Data data1 = new Data("hull", "desc", "jjj", 23, 89);
         System.out.println(JSON.toJSONString(data1));
     }
 

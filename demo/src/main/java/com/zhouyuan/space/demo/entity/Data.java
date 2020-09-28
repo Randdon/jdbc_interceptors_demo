@@ -64,11 +64,12 @@ public class Data {
                 '}';
     }
 
-    public Data(String name, String description, String detail, Integer age) {
+    public Data(String name, String description, String detail, Integer age, int id) {
         this.name = name;
         this.description = description;
         this.detail = detail;
         this.age = age;
+        this.id =id;
     }
 
     public Data() {

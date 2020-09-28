@@ -3,7 +3,7 @@ package com.zhouyuan.space.demo;
 import com.alibaba.druid.filter.Filter;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
-import com.casic.log.OracleDruidFilter;
+import com.casic.log.filter.OracleDruidFilter;
 import com.zhouyuan.space.demo.filter.TestFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

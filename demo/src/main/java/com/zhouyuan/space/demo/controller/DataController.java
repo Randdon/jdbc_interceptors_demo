@@ -26,18 +26,16 @@ public class DataController {
         //List<Data> data = dataService.listAll();
 
         //改
-/*
         Map<String, Object> map = new HashMap<>(2);
         map.put("id", 3);
         map.put("name", "zhouyuan");
         dataService.updateNameById(map);
 
         //增
-        dataService.save(new Data("hull", "desc", "jjj", 23));
+        dataService.save(new Data("hull", "desc", "jjj", 23, 9));
 
         //删
         dataService.deleteById(5);
-*/
 
         //查
         List<Data> data = dataService.listAll();
