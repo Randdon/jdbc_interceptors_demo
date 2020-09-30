@@ -1,6 +1,6 @@
 package com.zhouyuan.space.demo.util;
 
-import com.casic.log.constant.RequestSourceEnum;
+import com.casic.htzy.log.constant.RequestSourceEnum;
 
 import javax.servlet.http.HttpServletRequest;
 

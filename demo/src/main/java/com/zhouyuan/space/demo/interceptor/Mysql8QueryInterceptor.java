@@ -2,17 +2,17 @@ package com.zhouyuan.space.demo.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.casic.log.config.LogCenterProperties;
-import com.casic.log.constant.CommonConstant;
-import com.casic.log.constant.LogCodeEnum;
-import com.casic.log.constant.LogLevelConstant;
-import com.casic.log.domain.DataLogDetailInfo;
-import com.casic.log.domain.LogInfo;
-import com.casic.log.service.KafkaSender;
-import com.casic.log.utils.DateTimeUtils;
-import com.casic.log.utils.MD5Util;
-import com.casic.log.utils.SpringContextUtil;
-import com.casic.log.utils.TraceIdUtils;
+import com.casic.htzy.log.config.LogCenterProperties;
+import com.casic.htzy.log.constant.CommonConstant;
+import com.casic.htzy.log.constant.LogCodeEnum;
+import com.casic.htzy.log.constant.LogLevelConstant;
+import com.casic.htzy.log.domain.DataLogDetailInfo;
+import com.casic.htzy.log.domain.LogInfo;
+import com.casic.htzy.log.service.KafkaSender;
+import com.casic.htzy.log.utils.DateTimeUtils;
+import com.casic.htzy.log.utils.MD5Util;
+import com.casic.htzy.log.utils.SpringContextUtil;
+import com.casic.htzy.log.utils.TraceIdUtils;
 import com.mysql.cj.MysqlConnection;
 import com.mysql.cj.Query;
 import com.mysql.cj.conf.HostInfo;
@@ -178,7 +178,7 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
                 .threadName(Thread.currentThread().getName())
                 .sql(sql.get())
                 .sqlTime(executeTime)
-                .errorMsg(errorMsg)
+                .rawLog(errorMsg)
                 .build();
 
         String systemName = logCenterProperties.getSystemName();
@@ -265,11 +265,11 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
     public Exception interceptException(Exception sqlEx) {
         LogInfo logInfo = threadLocal.get();
         if (null != logInfo){
-            logInfo.getDataLogDetailInfo().setErrorMsg(sqlEx.getMessage() + Arrays.toString(sqlEx.getStackTrace()));
+            logInfo.getDataLogDetailInfo().setRawLog(sqlEx.getMessage() + Arrays.toString(sqlEx.getStackTrace()));
             if (sqlEx instanceof SQLException){
                 SQLException sqlException = (SQLException) sqlEx;
                 logInfo.getDataLogDetailInfo().setCode(String.valueOf(sqlException.getErrorCode()));
-                logInfo.getDataLogDetailInfo().setErrorMsg(sqlException.getSQLState());
+                logInfo.getDataLogDetailInfo().setRawLog(sqlException.getSQLState());
             }
             logJsonAndSend(logInfo,Logger::error);
             threadLocal.remove();

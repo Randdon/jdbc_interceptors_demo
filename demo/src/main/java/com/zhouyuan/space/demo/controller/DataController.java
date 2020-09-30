@@ -1,6 +1,7 @@
 package com.zhouyuan.space.demo.controller;
 
 import com.zhouyuan.space.demo.entity.Data;
+import com.zhouyuan.space.demo.entity.LogCenter;
 import com.zhouyuan.space.demo.service.DataService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +43,27 @@ public class DataController {
         System.out.println("controller ThreadName: " + Thread.currentThread().getName());
 
         //异常查
-        dataService.listAllExp(name,id);
+        dataService.listAllExp(name, id);
         System.out.println(data.get(0));
         return "ok";
     }
 
     @PostMapping(value = "/post")
     @Transactional
-    public String test(@Param("name") String name, @Param("id") int id,@RequestBody Data data) {
+    public String test(@Param("name") String name, @Param("id") int id, @RequestBody Data data) {
         dataService.save(data);
         return "ok";
+    }
+
+    @Autowired
+    LogCenter logCenterProperties;
+
+    @GetMapping(value = "/test1")
+    @Transactional
+    //@HttpLog(description = "http请求测试接口")
+    public String test1() {
+        Boolean aBoolean = logCenterProperties.getABoolean();
+        System.out.println(aBoolean == null);
+        return logCenterProperties.getSqlType().toString();
     }
 }
