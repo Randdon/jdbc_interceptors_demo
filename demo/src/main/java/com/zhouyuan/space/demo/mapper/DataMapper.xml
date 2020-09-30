@@ -5,35 +5,35 @@
     <select id="listAllExp"  resultType="com.zhouyuan.space.demo.entity.Data">
         select
         *
-        from "data"
-        where "bd" = 1
+        from data
+        where bd = 1
     </select>
     <select id="listAll"  resultType="com.zhouyuan.space.demo.entity.Data">
         select
         *
-        from "data"
+        from data
     </select>
     <select id="listAllById" parameterType="integer" resultType="com.zhouyuan.space.demo.entity.Data">
         select
         *
-        from "data"
-        where "id" = #{id}
+        from data
+        where id = #{id}
     </select>
 
     <update id="updateNameById" parameterType="map">
-        update "data"
-        set "name" = #{name}
-        where "id" = #{id}
+        update data
+        set name = #{name}
+        where id = #{id}
     </update>
 
     <insert id="save" parameterType="com.zhouyuan.space.demo.entity.Data">
-        insert into "data" ("id","name","description","detail","age")
-        values (#{id},#{name},#{description},#{detail},#{age})
+        insert into data (name,description,detail,age)
+        values (#{name},#{description},#{detail},#{age})
     </insert>
 
     <delete id="deleteById" parameterType="integer">
-        delete from "data"
-        where "id" = #{id}
+        delete from data
+        where id = #{id}
     </delete>
 
 </mapper>

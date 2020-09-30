@@ -1,5 +1,7 @@
 package com.zhouyuan.space.demo.controller;
 
+import com.casic.htzy.log.annotation.NetworkLog;
+import com.casic.htzy.log.constant.LogActionEnum;
 import com.zhouyuan.space.demo.entity.Data;
 import com.zhouyuan.space.demo.entity.LogCenter;
 import com.zhouyuan.space.demo.service.DataService;
@@ -21,7 +23,7 @@ public class DataController {
 
     @GetMapping(value = "/test")
     @Transactional
-    //@HttpLog(description = "http请求测试接口")
+    @NetworkLog(description = "http请求测试接口",action = LogActionEnum.READ)
     public String test(@Param("name") String name, @Param("id") int id) {
 
         //List<Data> data = dataService.listAll();
