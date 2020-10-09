@@ -33,7 +33,7 @@ public class DataController {
         dataService.updateNameById(map);
 
         //增
-        dataService.save(new Data("hull", "desc", "jjj", 23, 9));
+        dataService.save(new Data("hull", "desc", "jjj", 23, 10));
 
         //删
         dataService.deleteById(5);

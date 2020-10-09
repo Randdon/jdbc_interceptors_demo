@@ -31,7 +31,7 @@
         <dependency>
             <groupId>com.casic.htzy</groupId>
             <artifactId>log-center-client-common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.0.0-20201009.022505-2</version>
         </dependency>
 <!--
         <dependency>
@@ -109,6 +109,29 @@
             <version>1.9.3</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <url>http://192.168.13.93:8082/repository/public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>aliyun-repos</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
