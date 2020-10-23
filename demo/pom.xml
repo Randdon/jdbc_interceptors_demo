@@ -31,12 +31,12 @@
         <dependency>
             <groupId>com.casic.htzy</groupId>
             <artifactId>log-center-client-oracle-mysql5</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.casic.htzy</groupId>
             <artifactId>log-center-client-common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>0.1.1-SNAPSHOT</version>
         </dependency>
 
         <!--
