@@ -2,7 +2,7 @@ package com.zhouyuan.space.demo.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.casic.htzy.log.config.LogCenterProperties;
+import com.casic.htzy.log.config.LogCenterLocalProperties;
 import com.casic.htzy.log.constant.CommonConstant;
 import com.casic.htzy.log.constant.LogCodeEnum;
 import com.casic.htzy.log.constant.LogLevelConstant;
@@ -43,10 +43,6 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
     private static Logger logger = LoggerFactory.getLogger(Mysql8QueryInterceptor.class);
 
     private long startTime = 0L;
-
-    private static final LogCenterProperties logCenterProperties = SpringContextUtil.getBean(LogCenterProperties.class);
-
-    private static final KafkaSender kafkaSender = SpringContextUtil.getBean(KafkaSender.class);
 
     private static ThreadLocal<LogInfo> threadLocal = new ThreadLocal<>();
 
@@ -181,18 +177,10 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
                 .rawLog(errorMsg)
                 .build();
 
-        String systemName = logCenterProperties.getSystemName();
-        String systemId = MD5Util.getSaltMD5(CommonConstant.SALT, systemName);
-        String serverName = logCenterProperties.getServiceName();
-        String serverId = MD5Util.getSaltMD5(CommonConstant.SALT, serverName);
 
         LogInfo logInfo = LogInfo.builder()
                 .messageId(UUID.randomUUID().toString())
                 .userId(request.getHeader(CommonConstant.USER_ID))
-                .systemName(systemName)
-                .systemId(systemId)
-                .serviceName(serverName)
-                .serviceId(serverId)
                 .traceId(TraceIdUtils.getTraceId())
                 .timestamp(DateTimeUtils.format(now, DateTimeUtils.DATE_TIME_MILLIS))
                 .dataLogDetailInfo(dataBaseLogInfo)
@@ -224,18 +212,12 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
             logger.error("JSON转换出错，实体类为：{}", logInfo.toString(), e);
         }
 
-        String topic = logCenterProperties.getSystemName();
 
         if (!StringUtils.isEmpty(result)){
 
             //打印日志
             logAction.accept(logger,result);
 
-            try {
-                kafkaSender.send(result);
-            } catch (Exception e) {
-                logger.error("Kafka发送sql日志失败，logInfo：{}，Kafka`s topic：{}", result, topic, e);
-            }
         }
     }
 
