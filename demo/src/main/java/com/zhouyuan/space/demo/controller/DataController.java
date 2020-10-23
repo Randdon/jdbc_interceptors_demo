@@ -60,6 +60,7 @@ public class DataController {
     @Autowired
     LogCenter logCenterProperties;
 
+/*
     @GetMapping(value = "/test1")
     @Transactional
     //@HttpLog(description = "http请求测试接口")
@@ -68,4 +69,5 @@ public class DataController {
         System.out.println(aBoolean == null);
         return logCenterProperties.getSqlType().toString();
     }
+*/
 }
