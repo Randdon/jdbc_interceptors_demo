@@ -2,7 +2,7 @@ package com.zhouyuan.space.demo.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.casic.htzy.log.config.LogCenterProperties;
+import com.casic.htzy.log.config.LogCenterLocalProperties;
 import com.casic.htzy.log.constant.CommonConstant;
 import com.casic.htzy.log.constant.LogCodeEnum;
 import com.casic.htzy.log.constant.LogLevelConstant;
@@ -44,7 +44,7 @@ public class Mysql8QueryInterceptor implements QueryInterceptor, ExceptionInterc
 
     private long startTime = 0L;
 
-    private static final LogCenterProperties logCenterProperties = SpringContextUtil.getBean(LogCenterProperties.class);
+    private static final LogCenterLocalProperties logCenterProperties = SpringContextUtil.getBean(LogCenterLocalProperties.class);
 
     private static final KafkaSender kafkaSender = SpringContextUtil.getBean(KafkaSender.class);
 

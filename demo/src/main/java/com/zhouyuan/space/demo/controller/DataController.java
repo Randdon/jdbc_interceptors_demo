@@ -1,11 +1,17 @@
 package com.zhouyuan.space.demo.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.casic.htzy.log.annotation.NetworkLog;
 import com.casic.htzy.log.constant.LogActionEnum;
 import com.zhouyuan.space.demo.entity.Data;
 import com.zhouyuan.space.demo.entity.LogCenter;
 import com.zhouyuan.space.demo.service.DataService;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -26,6 +32,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,9 +88,23 @@ public class DataController {
     @Transactional
     //@HttpLog(description = "http请求测试接口")
     public String test1() {
+        Map<String,String> map = new HashMap<>(2);
+        String vone = JSON.toJSONString("vone",SerializerFeature.WriteSlashAsSpecial,SerializerFeature.QuoteFieldNames);
+        System.out.println(vone);
+        map.put("kone",vone);
+        map.put("ktwo","vtwo");
+        String jsonString = JSON.toJSONString(map, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteSlashAsSpecial);
+        System.out.println(jsonString);
+        String unescapeJava = StringEscapeUtils.unescapeJava(jsonString);
+        System.out.println(unescapeJava);
+        String unescapeJson = StringEscapeUtils.unescapeJson(jsonString);
+        System.out.println(unescapeJson);
+        return unescapeJava;
+/*
         Boolean aBoolean = logCenterProperties.getABoolean();
         System.out.println(aBoolean == null);
         return logCenterProperties.getSqlType().toString();
+*/
     }
 
     @GetMapping(value = "/test2")
@@ -142,4 +163,33 @@ public class DataController {
         }
 
     }
+
+    @GetMapping(value = "/test3")
+    public void test3() throws IOException {
+        // 创建Httpclient对象
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpResponse response = null;
+        try {
+            HttpGet httpGet = new HttpGet("http://192.168.12.249/open/query/users_trail?systemId=fad13f3167a80c3895cf2de34-15548b34637e6a-4c4a44d&trailTime=2020-10-24&userId=123456");
+            httpGet.setHeader("apikey","EB27E58D-2C26-4425-996A-6D4F4583B4A5");
+            CloseableHttpResponse httpResponse = httpclient.execute(httpGet);
+            StatusLine statusLine = httpResponse.getStatusLine();
+            System.out.println(statusLine);
+            HttpEntity entity = httpResponse.getEntity();
+            InputStream content = entity.getContent();
+            String s = IOUtils.toString(content, Charset.defaultCharset());
+            System.out.println(s);
+            FileUtils.copyInputStreamToFile(content,new File("E:\\code\\log_center\\docs\\result.txt"));
+        } catch (IOException exception){
+            System.out.println(exception);
+        }
+        finally {
+            if (response != null) {
+                response.close();
+            }
+            httpclient.close();
+        }
+
+    }
+
 }

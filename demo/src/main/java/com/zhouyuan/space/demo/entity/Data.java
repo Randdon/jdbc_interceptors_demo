@@ -53,6 +53,7 @@ public class Data {
         this.age = age;
     }
 
+/*
     @Override
     public String toString() {
         return "Data{" +
@@ -63,6 +64,7 @@ public class Data {
                 ", age=" + age +
                 '}';
     }
+*/
 
     public Data(String name, String description, String detail, Integer age, int id) {
         this.name = name;
