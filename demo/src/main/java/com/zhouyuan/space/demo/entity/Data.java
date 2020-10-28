@@ -53,7 +53,7 @@ public class Data {
         this.age = age;
     }
 
-    @Override
+/*    @Override
     public String toString() {
         return "Data{" +
                 "id=" + id +
@@ -62,7 +62,7 @@ public class Data {
                 ", detail='" + detail + '\'' +
                 ", age=" + age +
                 '}';
-    }
+    }*/
 
     public Data(String name, String description, String detail, Integer age, int id) {
         this.name = name;

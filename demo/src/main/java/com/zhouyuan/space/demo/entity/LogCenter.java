@@ -1,6 +1,5 @@
 package com.zhouyuan.space.demo.entity;
 
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "log.center.local")
-@Data
 public class LogCenter {
 
     /**
@@ -54,4 +52,85 @@ public class LogCenter {
     private Integer sqlType;
 
     private Boolean aBoolean;
+
+    private Data data;
+
+    public LogCenter(Data data1) {
+        this.data = data1;
+    }
+
+    public LogCenter() {
+    }
+
+    public String getSystemName() {
+        return systemName;
+    }
+
+    public void setSystemName(String systemName) {
+        this.systemName = systemName;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getCheckHealthUrl() {
+        return checkHealthUrl;
+    }
+
+    public void setCheckHealthUrl(String checkHealthUrl) {
+        this.checkHealthUrl = checkHealthUrl;
+    }
+
+    public Integer getSqlType() {
+        return sqlType;
+    }
+
+    public void setSqlType(Integer sqlType) {
+        this.sqlType = sqlType;
+    }
+
+    public Boolean getaBoolean() {
+        return aBoolean;
+    }
+
+    public void setaBoolean(Boolean aBoolean) {
+        this.aBoolean = aBoolean;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
 }

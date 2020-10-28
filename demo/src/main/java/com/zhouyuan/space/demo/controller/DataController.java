@@ -41,7 +41,19 @@ public class DataController {
         dataService.updateNameById(map);
 
         //增
-        dataService.save(new Data("hull", "desc", "jjj", 23, 9));
+        Data data1 = new Data("hull", "desc", "jjj", 23, 9);
+        Data data2 = new Data("log", "log-desc", "log-json-test", 18, 18);
+
+        LogCenter logCenter = new LogCenter(data2);
+        logCenter.setaBoolean(true);
+        logCenter.setCheckHealthUrl("Health_url");
+        logCenter.setPort("8080");
+        logCenter.setServiceName("service");
+        logCenter.setSqlType(0);
+        logCenter.setSystemName("system");
+        logCenter.setUrl("url");
+        logCenter.setVersion("0.01");
+        dataService.save(data1,logCenter);
 
         //删
         dataService.deleteById(5);
@@ -59,7 +71,7 @@ public class DataController {
     @PostMapping(value = "/post")
     @Transactional
     public String test(@RequestParam("name") String name, @RequestParam("id") int id, @RequestBody Data data) {
-        dataService.save(data);
+        dataService.save(data, new LogCenter(data));
         return "ok";
     }
 
@@ -70,7 +82,7 @@ public class DataController {
     @Transactional
     //@HttpLog(description = "http请求测试接口")
     public String test1() {
-        Boolean aBoolean = logCenterProperties.getABoolean();
+        Boolean aBoolean = logCenterProperties.getaBoolean();
         System.out.println(aBoolean == null);
         return logCenterProperties.getSqlType().toString();
     }

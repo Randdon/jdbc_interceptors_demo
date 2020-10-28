@@ -3,6 +3,7 @@ package com.zhouyuan.space.demo.service;
 import com.casic.htzy.log.annotation.ServiceLog;
 import com.casic.htzy.log.constant.LogActionEnum;
 import com.zhouyuan.space.demo.entity.Data;
+import com.zhouyuan.space.demo.entity.LogCenter;
 import com.zhouyuan.space.demo.mapper.DataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class DataService {
     }
 
     @ServiceLog(description = "保存用户信息",action = LogActionEnum.CREATE)
-    public void save(Data data){
+    public void save(Data data, LogCenter logCenter){
         dataMapper.save(data);
     }
 
