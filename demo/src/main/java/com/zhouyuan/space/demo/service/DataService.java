@@ -17,13 +17,14 @@ public class DataService {
     @Autowired
     DataMapper dataMapper;
 
+    @ServiceLog(description = "查询所有记录",action = LogActionEnum.READ)
     public List<Data> listAll(){
         System.out.println("service ThreadName: " + Thread.currentThread().getName());
 
         return dataMapper.listAll();
     }
 
-    @ServiceLog(description = "查询所有记录",action = LogActionEnum.READ)
+    @ServiceLog(description = "查询所有记录-异常",action = LogActionEnum.READ)
     public List<Data> listAllExp(String name, int id){
         return dataMapper.listAllExp();
     }
