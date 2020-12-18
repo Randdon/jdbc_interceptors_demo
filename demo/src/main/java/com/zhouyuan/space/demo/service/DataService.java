@@ -1,7 +1,7 @@
 package com.zhouyuan.space.demo.service;
 
 import com.casic.htzy.log.annotation.ServiceLog;
-import com.casic.htzy.log.constant.LogActionEnum;
+import com.casic.htzy.log.common.constant.stater.LogActionEnum;
 import com.zhouyuan.space.demo.entity.Data;
 import com.zhouyuan.space.demo.mapper.DataMapper;
 import org.springframework.beans.factory.annotation.Autowired;

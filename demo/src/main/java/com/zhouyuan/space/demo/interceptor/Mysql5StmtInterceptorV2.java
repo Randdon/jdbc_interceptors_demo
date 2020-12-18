@@ -2,14 +2,17 @@ package com.zhouyuan.space.demo.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.casic.htzy.log.common.constant.stater.DataSourceTypeEnum;
+import com.casic.htzy.log.common.constant.stater.LogLevelConstant;
+import com.casic.htzy.log.common.dto.starter.DataLogDetailInfo;
+import com.casic.htzy.log.common.dto.starter.LogInfo;
+import com.casic.htzy.log.common.dto.starter.SysTrailTypeDetailInfo;
+import com.casic.htzy.log.common.utils.DateTimeUtils;
+import com.casic.htzy.log.common.utils.MD5Util;
 import com.casic.htzy.log.config.LogCenterLocalProperties;
 import com.casic.htzy.log.constant.CommonConstant;
 import com.casic.htzy.log.constant.LogCodeEnum;
-import com.casic.htzy.log.constant.LogLevelConstant;
 import com.casic.htzy.log.constant.ServiceStatusEnum;
-import com.casic.htzy.log.domain.DataLogDetailInfo;
-import com.casic.htzy.log.domain.LogInfo;
-import com.casic.htzy.log.domain.SysTrailTypeDetailInfo;
 import com.casic.htzy.log.service.KafkaSender;
 import com.casic.htzy.log.utils.*;
 import com.mysql.jdbc.*;
@@ -21,6 +24,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.UUID;
@@ -215,16 +220,11 @@ public class Mysql5StmtInterceptorV2 implements StatementInterceptorV2 {
                     RequestContextHolder.getRequestAttributes()).getRequest();
 
             //组装数据库日志实体
-            DataLogDetailInfo dataLogDetailInfo = DataLogDetailInfo.builder()
-                    .code(code)
-                    .message(message)
-                    .level(level)
-                    .dataSource(connectionImpl.getHostPortPair() + "/" + connectionImpl.getCatalog())
-                    .threadName(Thread.currentThread().getName())
-                    .sql(sql)
-                    .sqlTime(DateTimeUtils.LocalDateTime2Long(now) - startTime)
-                    .rawLog(errorMsg)
-                    .build();
+            String dataSource = connectionImpl.getHostPortPair() + "/" + connectionImpl.getCatalog();
+            DataLogDetailInfo dataLogDetailInfo = new DataLogDetailInfo(level,code,
+                    message, dataSource, DataSourceTypeEnum.MYSQL5.getType(),
+                    sql,DateTimeUtils.LocalDateTime2Long(now) - startTime, Thread.currentThread().getName());
+            dataLogDetailInfo.setRawLog(errorMsg);
 
             //系统名称，根据系统名称进行MD5加密得到系统id
             String systemName = logCenterProperties.getSystemName();
@@ -234,25 +234,18 @@ public class Mysql5StmtInterceptorV2 implements StatementInterceptorV2 {
             String serviceId = MD5Util.getSaltMD5(CommonConstant.SALT, serviceName);
 
             //组装系统活动过程实体
-            SysTrailTypeDetailInfo sysTrailTypeDetailInfo = SysTrailTypeDetailInfo.builder()
-                    .servicePostStatusEnum(logCenterProperties.getServicePostStatusEnum().getType())
-                    .serviceStatusEnum(ServiceStatusEnum.RUNNING.getType())
-                    .build();
+            //组装系统活动过程实体
+            SysTrailTypeDetailInfo sysTrailTypeDetailInfo = new SysTrailTypeDetailInfo(ServiceStatusEnum.RUNNING.getType(),
+                    logCenterProperties.getServicePostStatusEnum().getType());
 
             //组装日志实体类
-            LogInfo logInfo = LogInfo.builder()
-                    .messageId(UUID.randomUUID().toString())
-                    .userId(request.getHeader(CommonConstant.USER_ID))
-                    .systemName(systemName)
-                    .systemId(systemId)
-                    .serviceName(serviceName)
-                    .serviceId(serviceId)
-                    .traceId(TraceIdUtils.getTraceId())
-                    .timestamp(DateTimeUtils.format(now, DateTimeUtils.DATE_TIME_MILLIS))
-                    .dataLogDetailInfo(dataLogDetailInfo)
-                    .sysTrailTypeDetailInfo(sysTrailTypeDetailInfo)
-                    .pid(SystemUtils.getPid())
-                    .build();
+            LogInfo logInfo = new LogInfo(UUID.randomUUID().toString(),systemName,systemId,serviceName,serviceId,
+                    TraceIdUtils.getTraceId(), ZonedDateTime.now(ZoneId.of("Asia/Shanghai")),
+                    SystemUtils.getPid());
+            logInfo.setUserId(request.getHeader(CommonConstant.USER_CODE));
+            logInfo.setUserName(request.getHeader(CommonConstant.USER_NAME));
+            logInfo.setSysTrailTypeDetailInfo(sysTrailTypeDetailInfo);
+            logInfo.setDataLogDetailInfo(dataLogDetailInfo);
 
             String result;
             try {
