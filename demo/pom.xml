@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>com.casic.htzy</groupId>
-            <artifactId>log-center-client-common</artifactId>
+            <artifactId>log-center-client-oracle-mysql5</artifactId>
             <version>0.1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -56,11 +56,6 @@
             <version>1.0.0</version>
         </dependency>
 -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.21</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

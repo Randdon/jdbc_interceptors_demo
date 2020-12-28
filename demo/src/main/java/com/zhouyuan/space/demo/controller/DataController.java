@@ -3,7 +3,7 @@ package com.zhouyuan.space.demo.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.casic.htzy.log.annotation.NetworkLog;
-import com.casic.htzy.log.constant.LogActionEnum;
+import com.casic.htzy.log.common.constant.stater.LogActionEnum;
 import com.zhouyuan.space.demo.entity.Data;
 import com.zhouyuan.space.demo.entity.LogCenter;
 import com.zhouyuan.space.demo.service.DataService;
