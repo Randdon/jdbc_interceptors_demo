@@ -1,6 +1,7 @@
 package com.zhouyuan.space.demo.service;
 
 import com.casic.htzy.log.config.CustomThreadPoolTaskExecutor;
+import com.zhouyuan.space.demo.util.PropertiesUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -34,9 +35,27 @@ public class DataServiceTest {
     }
 
     private static final Logger myLogger = LoggerFactory.getLogger("yuandong");
+
     @Test
     public void logBackTest(){
         myLogger.info("This is my Logger Info!!!!");
     }
 
+    @Test
+    public void propertiesReadAndWriteConcurrencyTest(){
+        String filePath = "H:\\temp\\test.properties";
+        for (int i = 0; i < 1000; i++) {
+            new Thread(() -> {
+                PropertiesUtils.versionPlus(filePath);
+                myLogger.info("ThreadName:{},getVersion:{}",Thread.currentThread().getName(),
+                        PropertiesUtils.getVersion(filePath));
+            }).start();
+        }
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println(PropertiesUtils.getVersion(filePath));
+    }
 }
